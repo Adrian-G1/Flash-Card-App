@@ -1,6 +1,11 @@
 from tkinter import *
+import pandas
 
 BACKGROUND_COLOR = "#B1DDC6"
+
+# --------------------------- NEW FLASH CARD --------------------------- #
+data = pandas.read_csv("data/french_words.csv")
+data_dict = data.to_dict()
 
 # ------------------------------ UI SETUP ------------------------------ #
 window = Tk()
