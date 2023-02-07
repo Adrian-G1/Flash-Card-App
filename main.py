@@ -3,14 +3,22 @@ from random import choice
 import pandas
 
 BACKGROUND_COLOR = "#B1DDC6"
+current_card = {}
+to_learn = {}
 
 # --------------------------- NEW FLASH CARD --------------------------- #
-data = pandas.read_csv("data/french_words.csv")
-to_learn = data.to_dict(orient="records")
+try:
+    data = pandas.read_csv("data/words_to_learn.csv")
+except FileNotFoundError:
+    print("Known words file not found.")
+    original_data = pandas.read_csv("data/french_words.csv")
+    to_learn = original_data.to_dict(orient="records")
+else:
+    to_learn = data.to_dict(orient="records")
 
 
 def new_card():
-    global flip_timer
+    global flip_timer, current_card
     window.after_cancel(flip_timer)
     current_card = choice(to_learn)
     canvas.itemconfig(word_text, text=current_card["French"], fill="black")
@@ -28,7 +36,10 @@ def flip_card(card: dict):
 
 # --------------------------- SAVE PROGRESS ---------------------------- #
 def known_word():
-    pass
+    to_learn.remove(current_card)
+    known_data = pandas.DataFrame(to_learn)
+    known_data.to_csv("data/words_to_learn.csv", index=False)
+    new_card()
 
 
 # ------------------------------ UI SETUP ------------------------------ #
@@ -62,7 +73,7 @@ cross_button = Button(image=cross_img, borderwidth=0, command=new_card)
 cross_button.grid(column=0, row=1)
 
 check_img = PhotoImage(file="images/right.png")
-check_button = Button(image=check_img, borderwidth=0, command=new_card)
+check_button = Button(image=check_img, borderwidth=0, command=known_word)
 check_button.grid(column=1, row=1)
 
 new_card()
