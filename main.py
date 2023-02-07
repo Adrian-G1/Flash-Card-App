@@ -26,6 +26,11 @@ def flip_card(card: dict):
     canvas.itemconfig(word_text, text=card["English"], fill="white")
 
 
+# --------------------------- SAVE PROGRESS ---------------------------- #
+def known_word():
+    pass
+
+
 # ------------------------------ UI SETUP ------------------------------ #
 window = Tk()
 window.title("Flashy")
